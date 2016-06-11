@@ -547,14 +547,7 @@ class RMG:
             days = (elapsed - seconds - minutes * 60 - hours * 3600) / (3600 * 24)
             logging.info('    Execution time (DD:HH:MM:SS): '
                 '{0:02}:{1:02}:{2:02}:{3:02}'.format(int(days), int(hours), int(minutes), int(seconds)))
-            try:
-                import psutil
-                process = psutil.Process(os.getpid())
-                rss, vms = process.memory_info()
-                memoryUse.append(rss / 1.0e6)
-                logging.info('    Memory used: %.2f MB' % (memoryUse[-1]))
-            except ImportError:
-                memoryUse.append(0.0)
+            memoryUse.append(0.0)
             if os.path.exists(os.path.join(self.outputDirectory,'restart.pkl.gz')):
                 restartSize.append(os.path.getsize(os.path.join(self.outputDirectory,'restart.pkl.gz')) / 1.0e6)
                 logging.info('    Restart file size: %.2f MB' % (restartSize[-1]))
@@ -623,15 +616,7 @@ class RMG:
             days = (elapsed - seconds - minutes * 60 - hours * 3600) / (3600 * 24)
             logging.info('    Execution time (DD:HH:MM:SS): '
                 '{0:02}:{1:02}:{2:02}:{3:02}'.format(int(days), int(hours), int(minutes), int(seconds)))
-            try:
-                import psutil
-                process = psutil.Process(os.getpid())
-                rss, vms = process.memory_info()
-                memoryUse.append(rss / 1.0e6)
-                logging.info('    Memory used: %.2f MB' % (memoryUse[-1]))
-            except ImportError:
-                memoryUse.append(0.0)
-    
+            memoryUse.append(0.0)
         # Write output file
         logging.info('')
         logging.info('MODEL GENERATION COMPLETED')
