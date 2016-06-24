@@ -760,14 +760,16 @@ class CoreEdgeReactionModel:
                 numOldEdgeSpecies -= 1
                 # moved these reactions from edge to core
                 numOldEdgeReactions -= len(reactionsMovedFromEdge)
-
+            count = 0
         else:
             # We are reacting the edge
-
+            count = 0
             for i in xrange(numOldCoreSpecies):
                 if unimolecularReact[i]:
                     # Find reactions involving the species that are unimolecular
                     reactions = list(react(self.core.species[i].copy(deep=True)))
+                    it_rxn = len(reactions)
+                    count = count + it_rxn
                     reactions = [self.inflate(reaction) for reaction in reactions]
                     self.processNewReactions(reactions, self.core.species[i], None)
 
@@ -775,12 +777,15 @@ class CoreEdgeReactionModel:
                 for j in xrange(i,numOldCoreSpecies):
                     # Find reactions involving the species that are bimolecular
                     # This includes a species reacting with itself (if its own concentration is high enough)
-                    
                     if bimolecularReact[i,j]:
                         reactions = list(react(self.core.species[i].copy(deep=True), [self.core.species[j]]))
                         # Consider the latest added core species as the 'new' species
+                        it_rxn = len(reactions)
+                        count = count + it_rxn
                         reactions = [self.inflate(reaction) for reaction in reactions]
                         self.processNewReactions(reactions, self.core.species[j], None)
+
+            #logging.info('number of rxn generated: %d' %count)
 
         ################################################################
         # Begin processing the new species and reactions
@@ -856,7 +861,21 @@ class CoreEdgeReactionModel:
             reactEdge=reactEdge,
         )
 
-        logging.info('')
+        if reactEdge is True:
+            numold = numOldEdgeReactions + numOldCoreReactions
+            numnewedgereactions = float(len(newEdgeReactions))
+            countfloat = float(count)
+            if numnewedgereactions == 0:
+                frac = 0
+            else:
+                frac = round(numnewedgereactions/countfloat, 3)
+            logging.info('')
+            logging.info('number of rxn generated: %d' %count)
+            logging.info('number of old rxn in list: %d' %numold)
+            logging.info('number of new rxn added to list: %d' %numnewedgereactions)
+            logging.info('fraction of generated rxn that are added: %.3f' %frac)
+            logging.info('')
+            #logging.info('Fraction of reactions generated added new: %d' %float(count)/float(numnewrxn))
 
     def processNewReactions(self, newReactions, newSpecies, pdepNetwork=None):
         """

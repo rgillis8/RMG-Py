@@ -79,7 +79,8 @@ model(
     toleranceKeepInEdge=0.0001,
     toleranceMoveToCore=0.01,
     toleranceInterruptSimulation=0.5,
-    maximumEdgeSpecies=1000
+    maximumEdgeSpecies=1000,
+    filterReactions = True
 )
 
 options(

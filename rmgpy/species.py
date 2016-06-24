@@ -387,7 +387,8 @@ class Species(object):
 
     def copy(self, deep=False):
         """
-        Create a copy of the current species. If the 
+        Create a copy of the
+        current species. If the
         kw argument 'deep' is True, then a deep copy will be made of the 
         Molecule objects in self.molecule.
 
