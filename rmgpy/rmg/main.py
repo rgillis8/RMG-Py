@@ -469,10 +469,10 @@ class RMG(util.Subject):
             # This is necessary so that the PDep algorithm can identify the bath gas            
             for spec in self.initialSpecies:
                 if not spec.reactive:
-                    self.reactionModel.enlarge(spec)
+                    self.reactionModel.enlarge(spec, saveEdgeSpecies=self.saveEdgeSpecies)
             for spec in self.initialSpecies:
                 if spec.reactive:
-                    self.reactionModel.enlarge(spec)
+                    self.reactionModel.enlarge(spec, saveEdgeSpecies=self.saveEdgeSpecies)
             
             #chatelak: store constant SPC indices in the reactor attributes if any constant SPC provided in the input file
             #advantages to write it here: this is run only once (as species indexes does not change over the generation)
@@ -548,7 +548,7 @@ class RMG(util.Subject):
 
         self.reactionModel.enlarge(reactEdge=True, 
             unimolecularReact=self.unimolecularReact, 
-            bimolecularReact=self.bimolecularReact)
+            bimolecularReact=self.bimolecularReact, saveEdgeSpecies=self.saveEdgeSpecies)
 
         logging.info('Completed initial enlarge edge step...')
         self.saveEverything()
@@ -617,7 +617,7 @@ class RMG(util.Subject):
                 
                 # Add objects to enlarge to the core first
                 for objectToEnlarge in objectsToEnlarge:
-                    self.reactionModel.enlarge(objectToEnlarge)
+                    self.reactionModel.enlarge(objectToEnlarge, saveEdgeSpecies=self.saveEdgeSpecies)
                 
                 if len(self.reactionModel.core.species) > numCoreSpecies:
                     # If there were core species added, then react the edge
@@ -649,7 +649,7 @@ class RMG(util.Subject):
                     
                     self.reactionModel.enlarge(reactEdge=True, 
                             unimolecularReact=self.unimolecularReact, 
-                            bimolecularReact=self.bimolecularReact)
+                            bimolecularReact=self.bimolecularReact, saveEdgeSpecies=self.saveEdgeSpecies)
 
             self.saveEverything()
 

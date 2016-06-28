@@ -682,7 +682,7 @@ class CoreEdgeReactionModel:
 
         return forward
 
-    def enlarge(self, newObject=None, reactEdge=False, unimolecularReact=None, bimolecularReact=None):
+    def enlarge(self, newObject=None, reactEdge=False, unimolecularReact=None, bimolecularReact=None, saveEdgeSpecies=None):
         """
         Enlarge a reaction model by processing the objects in the list `newObject`. 
         If `newObject` is a
@@ -844,13 +844,15 @@ class CoreEdgeReactionModel:
         newCoreReactions = self.core.reactions[numOldCoreReactions:]
         newEdgeReactions = self.edge.reactions[numOldEdgeReactions:]
         checkedReactions = self.core.reactions[:numOldCoreReactions] + self.edge.reactions[:numOldEdgeReactions]
+
         from rmgpy.chemkin import markDuplicateReaction
         for rxn in newCoreReactions:
             markDuplicateReaction(rxn, checkedReactions)
             checkedReactions.append(rxn)
-        for rxn in newEdgeReactions:
-            markDuplicateReaction(rxn, checkedReactions)
-            checkedReactions.append(rxn)
+        if saveEdgeSpecies:
+            for rxn in newEdgeReactions:
+                markDuplicateReaction(rxn, checkedReactions)
+                checkedReactions.append(rxn)
         self.printEnlargeSummary(
             newCoreSpecies=self.core.species[numOldCoreSpecies:],
             newCoreReactions=self.core.reactions[numOldCoreReactions:],
