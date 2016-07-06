@@ -76,6 +76,7 @@ class Species(rmgpy.species.Species):
                  energyTransferModel=None, reactive=True, props=None, coreSizeAtCreation=0):
         rmgpy.species.Species.__init__(self, index, label, thermo, conformer, molecule, transportData, molecularWeight, energyTransferModel, reactive, props)
         self.coreSizeAtCreation = coreSizeAtCreation
+        self.generationcounter = 1
 
     def __reduce__(self):
         """
@@ -464,7 +465,9 @@ class CoreEdgeReactionModel:
         # existing species if not new
         if checkForExisting:
             found, spec = self.checkForExistingSpecies(molecule)
-            if found: return spec, False
+            if found:
+                spec.generationcounter += 1
+                return spec, False
 
         # Check that the structure is not forbidden
 
@@ -595,7 +598,7 @@ class CoreEdgeReactionModel:
 
     def makeNewReaction(self, forward, checkExisting=True):
         """
-        Make a new reaction given a :class:`Reaction` object `forward`. 
+        Make a new reaction given a :class:`Reaction` object `forward`.
         The reaction is added to the global list of reactions.
         Returns the reaction in the direction that corresponds to the
         estimated kinetics, along with whether or not the reaction is new to the
@@ -604,7 +607,7 @@ class CoreEdgeReactionModel:
         The forward direction is determined using the "is_reverse" attribute of the
         reaction's family.  If the reaction family is its own reverse, then it is
         made such that the forward reaction is exothermic at 298K.
-        
+
         The forward reaction is appended to self.newReactionList if it is new.
         """
 
@@ -616,7 +619,7 @@ class CoreEdgeReactionModel:
                 reactantIndex = forward.reactants.index(forward.pairs[pairIndex][0])
                 productIndex = forward.products.index(forward.pairs[pairIndex][1])
                 forward.pairs[pairIndex] = (reactants[reactantIndex], products[productIndex])
-                if hasattr(forward, 'reverse'):                   
+                if hasattr(forward, 'reverse'):
                     if forward.reverse:
                         forward.reverse.pairs[pairIndex] = (products[productIndex], reactants[reactantIndex])
         forward.reactants = reactants
@@ -632,7 +635,7 @@ class CoreEdgeReactionModel:
             if hasattr(forward, 'reverse'):
                 if forward.reverse:
                     forward.reverse.generatePairs()
-            
+
         # Note in the log
         if isinstance(forward, TemplateReaction):
             logging.debug('Creating new {0} template reaction {1}'.format(forward.family, forward))
@@ -642,7 +645,7 @@ class CoreEdgeReactionModel:
             logging.debug('Creating new library reaction {0}'.format(forward))
         else:
             raise Exception("Unrecognized reaction type {0!s}".format(forward.__class__))
-        
+
         self.registerReaction(forward)
 
         forward.index = self.reactionCounter + 1

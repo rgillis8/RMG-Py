@@ -709,7 +709,21 @@ class RMG(util.Subject):
         coreSpec, coreReac, edgeSpec, edgeReac = self.reactionModel.getModelSize()
         logging.info('The final model core has %s species and %s reactions' % (coreSpec, coreReac))
         logging.info('The final model edge has %s species and %s reactions' % (edgeSpec, edgeReac))
-        
+
+        coreSpecies = self.reactionModel.core.species
+        for i in range(0,numCoreSpecies):
+            label = str(coreSpecies[i].label)
+            counter = str(coreSpecies[i].generationcounter)
+            logging.info('Species: %s makeNewSpecies() calls to find the molecule exists: %s' %(label, counter))
+
+        edgeSpecies = self.reactionModel.edge.species
+        numedgeSpecies = len(edgeSpecies)
+        for i in range(0,numedgeSpecies):
+            label = str(edgeSpecies[i].label)
+            counter = str(edgeSpecies[i].generationcounter)
+            logging.info('Species: %s makeNewSpecies() calls to find the molecule exists: %s' %(label, counter))
+
+
         self.finish()
 
     def initializeReactionThresholdAndReactFlags(self):
