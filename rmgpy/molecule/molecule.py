@@ -57,6 +57,7 @@ import rmgpy.molecule.parser as parser
 import rmgpy.molecule.generator as generator
 import rmgpy.molecule.resonance as resonance
 from rmgpy.molecule.group import GroupAtom, GroupBond, Group
+import copy
 
 ################################################################################
 
@@ -813,10 +814,10 @@ class Molecule(Graph):
         If `deep` is ``False`` or not specified, a shallow copy is made: the
         original vertices and edges are used in the new graph.
         """
-        other = cython.declare(Molecule)
-        g = Graph.copy(self, deep)
-        other = Molecule(g.vertices)
-        other.multiplicity = self.multiplicity
+        if deep:
+            other = copy.deepcopy(self)
+        else:
+            other = copy.copy(self)
         return other
 
     def merge(self, other):
