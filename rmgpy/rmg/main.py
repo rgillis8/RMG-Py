@@ -188,7 +188,7 @@ class RMG(util.Subject):
         self.pressureDependence = None
         self.quantumMechanics = None
         self.speciesConstraints = {}
-        self.wallTime = 0
+        self.wallTime = '00:00:00'
         self.initializationTime = 0
 
         self.execTime = []
@@ -376,28 +376,19 @@ class RMG(util.Subject):
             Species.solventStructure = self.database.solvation.getSolventStructure(self.solvent)
             diffusionLimiter.enable(Species.solventData, self.database.solvation)
             logging.info("Setting solvent data for {0}".format(self.solvent))
-    
-        # Set wall time
-        try:
-            walltime = kwargs['walltime']
-        except KeyError:
-            walltime = '0'
 
-        if walltime  == '0': 
-            self.wallTime = 0
+        data = self.wallTime.split(':')
+        if len(data) == 1:
+            self.wallTime = int(data[-1])
+        elif len(data) == 2:
+            self.wallTime = int(data[-1]) + 60 * int(data[-2])
+        elif len(data) == 3:
+            self.wallTime = int(data[-1]) + 60 * int(data[-2]) + 3600 * int(data[-3])
+        elif len(data) == 4:
+            self.wallTime = int(data[-1]) + 60 * int(data[-2]) + 3600 * int(data[-3]) + 86400 * int(data[-4])
         else:
-            data = walltime[0].split(':')
-            if len(data) == 1:
-                self.wallTime = int(data[-1])
-            elif len(data) == 2:
-                self.wallTime = int(data[-1]) + 60 * int(data[-2])
-            elif len(data) == 3:
-                self.wallTime = int(data[-1]) + 60 * int(data[-2]) + 3600 * int(data[-3])
-            elif len(data) == 4:
-                self.wallTime = int(data[-1]) + 60 * int(data[-2]) + 3600 * int(data[-3]) + 86400 * int(data[-4])
-            else:
-                raise ValueError('Invalid format for wall time; should be HH:MM:SS.')
-    
+            raise ValueError('Invalid format for wall time; should be DD:HH:MM:SS.')
+
         # Initialize reaction model
         if restart:
             self.loadRestartFile(os.path.join(self.outputDirectory,'restart.pkl'))
@@ -648,7 +639,6 @@ class RMG(util.Subject):
                             bimolecularReact=self.bimolecularReact)
 
             self.saveEverything()
-
 
             # Consider stopping gracefully if the next iteration might take us
             # past the wall time
