@@ -269,7 +269,7 @@ def pressureDependence(
     rmg.pressureDependence.activeKRotor = True
     rmg.pressureDependence.rmgmode = True
 
-def options(units='si', saveRestartPeriod=None, drawMolecules=False, generatePlots=False, saveSimulationProfiles=False, verboseComments=False, saveEdgeSpecies=False):
+def options(units='si', saveRestartPeriod=None, drawMolecules=False, generatePlots=False, saveSimulationProfiles=False, verboseComments=False, saveEdgeSpecies=False, wallTime='00:00:00:00'):
     rmg.units = units
     rmg.saveRestartPeriod = Quantity(saveRestartPeriod) if saveRestartPeriod else None
     rmg.drawMolecules = drawMolecules
@@ -277,6 +277,7 @@ def options(units='si', saveRestartPeriod=None, drawMolecules=False, generatePlo
     rmg.saveSimulationProfiles = saveSimulationProfiles
     rmg.verboseComments = verboseComments
     rmg.saveEdgeSpecies = saveEdgeSpecies
+    rmg.wallTime = wallTime
 
 def generatedSpeciesConstraints(**kwargs):
     validConstraints = [
@@ -538,6 +539,7 @@ def saveInputFile(path, rmg):
     f.write('    generatePlots = {0},\n'.format(rmg.generatePlots))
     f.write('    saveSimulationProfiles = {0},\n'.format(rmg.saveSimulationProfiles))
     f.write('    verboseComments = {0},\n'.format(rmg.verboseComments))
+    f.write('    wallTime = {0},\n'.format(rmg.wallTime))
     f.write(')\n\n')
         
     f.close()
