@@ -687,7 +687,37 @@ class RMG(util.Subject):
         coreSpec, coreReac, edgeSpec, edgeReac = self.reactionModel.getModelSize()
         logging.info('The final model core has %s species and %s reactions' % (coreSpec, coreReac))
         logging.info('The final model edge has %s species and %s reactions' % (edgeSpec, edgeReac))
-        
+        logging.info('')
+        logging.info('Isomorphism Checks')
+
+        finalcounttotal = 0
+        finalcountfingerprint = 0
+        finalcountmult = 0
+        finalcountgraphiso = 0
+
+        for i in range(0,numCoreSpecies):
+            finalcounttotal += self.reactionModel.core.species[11].molecule[0].counttotal
+            finalcountfingerprint += self.reactionModel.core.species[11].molecule[0].countfingerprint
+            finalcountmult += self.reactionModel.core.species[11].molecule[0].countmult
+            finalcountgraphiso += self.reactionModel.core.species[11].molecule[0].countgraphiso
+
+        edgeSpecies = self.reactionModel.edge.species
+        numedgeSpecies = len(edgeSpecies)
+        for i in range(0,numedgeSpecies):
+            finalcounttotal += self.reactionModel.edge.species[11].molecule[0].counttotal
+            finalcountfingerprint += self.reactionModel.edge.species[11].molecule[0].countfingerprint
+            finalcountmult += self.reactionModel.edge.species[11].molecule[0].countmult
+            finalcountgraphiso += self.reactionModel.edge.species[11].molecule[0].countgraphiso
+
+        logging.info('Total Calls to molecule.isIsomorphic: %d' %finalcounttotal)
+        logging.info('Resolved by fingerprint check: %d' %finalcountfingerprint)
+        logging.info('Resolved by multiplicity check: %d' %finalcountmult)
+        logging.info('Resolved by graph.isIsomophic check: %d' %finalcountgraphiso)
+        #logging.info(finalcounttotal)
+        #logging.info(finalcountfingerprint)
+        #logging.info(finalcountmult)
+        #logging.info(finalcountgraphiso)
+
         self.finish()
 
     def initializeReactionThresholdAndReactFlags(self):

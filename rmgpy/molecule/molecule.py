@@ -589,7 +589,7 @@ class Molecule(Graph):
     `InChI` string representing the molecular structure.
     """
 
-    def __init__(self, atoms=None, symmetry=-1, multiplicity=-187, props=None, SMILES=''):
+    def __init__(self, atoms=None, symmetry=-1, multiplicity=-187, props=None, SMILES=''):#, counttotal=0,countfingerprint=0,countmult=0,countgraphiso=0):
         Graph.__init__(self, atoms)
         self.symmetryNumber = symmetry
         self.multiplicity = multiplicity
@@ -599,6 +599,10 @@ class Molecule(Graph):
         self.props = props or {}
         if multiplicity != -187:  # it was set explicitly, so re-set it (fromSMILES etc may have changed it)
             self.multiplicity = multiplicity
+        self.counttotal = 0
+        self.countfingerprint = 0
+        self.countmult = 0
+        self.countgraphiso = 0
     
     
     def __hash__(self):
@@ -991,17 +995,21 @@ class Molecule(Graph):
         """
         # It only makes sense to compare a Molecule to a Molecule for full
         # isomorphism, so raise an exception if this is not what was requested
+        self.counttotal += 1
         if not isinstance(other, Molecule):
             raise TypeError('Got a {0} object for parameter "other", when a Molecule object is required.'.format(other.__class__))
         # Do the quick isomorphism comparison using the fingerprint
         # Two fingerprint strings matching is a necessary (but not
         # sufficient!) condition for the associated molecules to be isomorphic
         if self.getFingerprint() != other.getFingerprint():
+            self.countfingerprint += 1
             return False
         # check multiplicity
         if self.multiplicity != other.multiplicity:
+            self.countmult += 1
             return False
         # Do the full isomorphism comparison
+        self.countgraphiso += 1
         result = Graph.isIsomorphic(self, other, initialMap)
         return result
 

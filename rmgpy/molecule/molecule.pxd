@@ -110,6 +110,10 @@ cdef class Molecule(Graph):
     cdef str _fingerprint
     cdef public str InChI
     cdef public dict props
+    cdef public int counttotal
+    cdef public int countfingerprint
+    cdef public int countmult
+    cdef public int countgraphiso
     
     cpdef str getFingerprint(self)
     
