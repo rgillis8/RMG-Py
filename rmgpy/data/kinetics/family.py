@@ -794,6 +794,10 @@ class KineticsFamily(Database):
             f.write('    {0!r},\n'.format(action))
         f.write('])\n\n')
 
+        if self.boundaryAtoms:
+            f.write('boundaryAtoms = ["{0}", "{1}"]'.format(self.boundaryAtoms[0], self.boundaryAtoms[1]))
+            f.write('\n\n')
+
         # Save the entries
         for entry in entries:
             self.saveEntry(f, entry)
@@ -1686,9 +1690,9 @@ class KineticsFamily(Database):
                     pairs.append([reaction.reactants[1],reaction.products[0]])
                 else:
                     error = True
-        elif self.label.lower() == 'disproportionation':
-            # Hardcoding for disproportionation: pair the reactant containing
-            # *1 with the product containing *1
+        elif self.label.lower() in ['disproportionation', 'co_disproportionation']:
+            # Hardcoding for disproportionation and co_disproportionation: pair
+            # the reactant containing *1 with the product containing *1
             assert len(reaction.reactants) == len(reaction.products) == 2
             if reaction.reactants[0].containsLabeledAtom('*1'):
                 if reaction.products[0].containsLabeledAtom('*1'):
