@@ -332,6 +332,7 @@ class StatMechJob:
         # The E0 that is read from the log file is without the ZPE and corresponds to E_elec
         if E0 is None:
             E0 = energyLog.loadEnergy(self.frequencyScaleFactor)
+
         else:
             E0 = E0 * constants.E_h * constants.Na         # Hartree/particle to J/mol
         E0 = applyEnergyCorrections(E0, self.modelChemistry, atoms, bonds if self.applyBondEnergyCorrections else {})
@@ -557,8 +558,8 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
     # Note: If your model chemistry does not include spin orbit coupling, you should add the corrections to the energies here
     if modelChemistry == 'CBS-QB3':
         atomEnergies = {'H':-0.499818 + SOC['H'], 'N':-54.520543 + SOC['N'], 'O':-74.987624+ SOC['O'], 'C':-37.785385+ SOC['C'], 'P':-340.817186+ SOC['P'], 'S': -397.657360+ SOC['S']}
-    if modelChemistry == 'M06-2X':
-        atomEnergies = {'H':-0.498135 + SOC['H'], 'N':-54.520543 + SOC['N'], 'O':-74.987624+ SOC['O'], 'C':-37.842468+ SOC['C'], 'P':-340.817186+ SOC['P'], 'S': -397.657360+ SOC['S']}
+    elif modelChemistry == 'M06-2X/cc-pVTZ':
+        atomEnergies = {'H':-0.498135 + SOC['H'], 'N':-54.586780 + SOC['N'], 'O':-75.064242 + SOC['O'], 'C':-37.842468 + SOC['C'], 'P':-340.817186+ SOC['P'], 'S': -398.101240 + SOC['S']}
     elif modelChemistry == 'G3':
         atomEnergies = {'H':-0.5010030, 'N':-54.564343, 'O':-75.030991, 'C':-37.827717, 'P':-341.116432, 'S': -397.961110}
     elif modelChemistry == 'M08SO/MG3S*': # * indicates that the grid size used in the [QChem} electronic 
@@ -713,11 +714,11 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
     # H-Cl correction from CBS-QB3 enthalpy difference with Gurvich 1989, HF298=-92.31 kJ
     # 'N=O', 'N-N', 'N=N', 'N-O' corrections taken from Table 2 in R. Ashcraft, S. Raman, W.H. Green J. Phys. Chem. B, Vol. 111, No. 41, 2007; doi: 10.1021/jp073539t
     elif modelChemistry == 'CBS-QB3':
-        bondEnergies = { 'C-H': -0.11, 'C-C': -0.3, 'C=C': -0.08, 'C#C': -0.64,
-            'O-H': 0.02, 'C-O': 0.33, 'C=O': 0.55, 'N#N': -2.0, 'O=O': -0.2,
-            'H-H': 1.1, 'C#N': -0.89, 'C-S': 0.43, 'S=O': -0.78, 'S-H': 0.0,
-            'N-H': -0.42, 'C-N': -0.13, 'N=O': 1.11, 'N-N': -1.87, 'N=N': -1.58,
-            'N-O': 0.35, }
+        bondEnergies = {'C-H': 0}#{ 'C-H': -0.11, 'C-C': -0.3, 'C=C': -0.08, 'C#C': -0.64,
+        #   'O-H': 0.02, 'C-O': 0.33, 'C=O': 0.55, 'N#N': -2.0, 'O=O': -0.2,
+        #    'H-H': 1.1, 'C#N': -0.89, 'C-S': 0.43, 'S=O': -0.78, 'S-H': 0.0,
+        #    'N-H': -0.42, 'C-N': -0.13, 'N=O': 1.11, 'N-N': -1.87, 'N=N': -1.58,
+        #    'N-O': 0.35, }
     elif modelChemistry in ['B3LYP/cbsb7', 'B3LYP/6-311G(2d,d,p)', 'DFT_G03_b3lyp','B3LYP/6-311+G(3df,2p)']:
         bondEnergies = { 'C-H': 0.25, 'C-C': -1.89, 'C=C': -0.40, 'C#C': -1.50,
             'O-H': -1.09, 'C-O': -1.18, 'C=O': -0.01, 'N-H': 1.36, 'C-N': -0.44, 
