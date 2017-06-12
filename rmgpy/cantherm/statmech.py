@@ -562,6 +562,8 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
         atomEnergies = {'H':-0.498135 + SOC['H'], 'N':-54.586780 + SOC['N'], 'O':-75.064242 + SOC['O'], 'C':-37.842468 + SOC['C'], 'P':-340.817186 + SOC['P'], 'S': -398.101240 + SOC['S']}
     elif modelChemistry == 'CCSD(T)/cc-pVTZ':
         atomEnergies = {'H':-0.499810 + SOC['H'], 'N':-54.514707 + SOC['N'], 'O':-74.973962 + SOC['O'], 'C':-37.780762 + SOC['C'], 'S':-397.653349 + SOC['S']}
+    elif modelChemistry == 'B3LYP/3-21g':
+        atomEnergies = {'H':-0.497311 + SOC['H'], 'N':-54.295463 + SOC['N'], 'O':-74.660295 + SOC['O'], 'C':-37.642697 + SOC['C'], 'S':-396.162246 + SOC['S']}
     elif modelChemistry == 'G3':
         atomEnergies = {'H':-0.5010030, 'N':-54.564343, 'O':-75.030991, 'C':-37.827717, 'P':-341.116432, 'S': -397.961110}
     elif modelChemistry == 'M08SO/MG3S*': # * indicates that the grid size used in the [QChem} electronic 

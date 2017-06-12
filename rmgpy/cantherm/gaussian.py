@@ -261,7 +261,7 @@ class GaussianLog:
         """
 
         modes = []
-        E0 = None; E0_cbs = None; scaledZPE = None
+        E0 = None; E0_cbs = None; scaledZPE = None; E0_ccsd2 = None; E0_ccsd = None;
         spinMultiplicity = 1
 
         f = open(self.path, 'r')
@@ -274,7 +274,13 @@ class GaussianLog:
                 E0_cbs = float(line.split()[3]) * constants.E_h * constants.Na
             elif 'G3(0 K)' in line:
                 E0_cbs = float(line.split()[2]) * constants.E_h * constants.Na
-            
+            elif 'T5(CCSD)' in line:
+                line = f.readline()
+                string1 = str(line.split()[1])
+                digits = string1[0:14]
+                exponent = string1[-2:]
+                E0_ccsd = float(digits)*10**int(exponent)
+                E0_ccsd2 = E0_ccsd * constants.E_h * constants.Na
             # Read the ZPE from the "E(ZPE)=" line, as this is the scaled version.
             # Gaussian defines the following as
             # E (0 K) = Elec + E(ZPE), 
@@ -293,11 +299,13 @@ class GaussianLog:
 
         # Close file when finished
         f.close()
-        
+
         if E0_cbs is not None:
             if scaledZPE is None:
                 raise Exception('Unable to find zero-point energy in Gaussian log file.')
             return E0_cbs - scaledZPE
+        elif E0_ccsd2 is not None:
+            return E0_ccsd2
         elif E0 is not None:
             return E0
         else: raise Exception('Unable to find energy in Gaussian log file.')
