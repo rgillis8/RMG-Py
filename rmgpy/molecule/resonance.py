@@ -258,10 +258,10 @@ def _generateResonanceStructures(molList, methodList, keepIsomorphic=False, copy
             else:
                 molList.append(newMol)
         # Move to next resonance isomer
-        print(len(molList))
         print(index)
         for struc in molList:
             print "{0}".format(struc)
+            print(struc.toAdjacencyList())
         index += 1
     return molList
 
@@ -375,11 +375,11 @@ def generateLonePairRadicalResonanceDoubleBondStructures(mol):
             for atom1, atom2, bond12 in paths:
                 # Adjust to (potentially) new resonance isomer
                 atom1.decrementRadical()
+                #atom1.updateCharge()
                 atom2.incrementRadical()
                 atom2.decrementLonePairs()
+                #atom1.updateCharge()
                 bond12.incrementOrder()
-                atom1.updateCharge()
-                atom2.updateCharge()
                 # Make a copy of isomer
                 isomer = mol.copy(deep=True)
                 # Also copy the connectivity values, since they are the same
@@ -393,10 +393,10 @@ def generateLonePairRadicalResonanceDoubleBondStructures(mol):
                     v2.sortingLabel = v1.sortingLabel
                 # Restore current isomer
                 atom1.incrementRadical()
+                #atom1.updateCharge()
                 atom2.decrementRadical()
                 atom2.incrementLonePairs()
-                atom1.updateCharge()
-                atom2.updateCharge()
+                #atom1.updateCharge()
                 bond12.decrementOrder()
                 # Append to isomer list if unique
                 isomer.updateAtomTypes(logSpecies=False)

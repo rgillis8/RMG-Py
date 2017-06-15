@@ -272,10 +272,14 @@ def findAllDelocalizationPathsLonePairRadicalDoubleBond(atom1):
     # No paths if atom1 is not a radical
     if atom1.radicalElectrons <= 0:
         return []
+    if atom1.charge != 0:
+        return []
 
     # Find all delocalization paths
     paths = []
     for atom2, bond12 in atom1.edges.items():
+        if atom2.charge != 0:
+            return []
         # Only single bonds are considered
         if bond12.isSingle():
             if ((atom2.lonePairs == 1 and atom2.isNitrogen()) or (atom2.lonePairs == 3 and atom2.isOxygen()) or (atom2.lonePairs >= 1 and atom2.isSulfur())) and (atom2.radicalElectrons == 0):
