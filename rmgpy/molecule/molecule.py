@@ -1066,6 +1066,7 @@ class Molecule(Graph):
         be a :class:`Molecule` object, or a :class:`TypeError` is raised.
         Also ensures multiplicities are also equal.
         """
+        #####################This loops for some reason!#####################################
         # It only makes sense to compare a Molecule to a Molecule for full
         # isomorphism, so raise an exception if this is not what was requested
         if not isinstance(other, Molecule):
