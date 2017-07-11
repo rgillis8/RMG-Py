@@ -5,8 +5,8 @@
 #
 #   RMG - Reaction Mechanism Generator
 #
-#   Copyright (c) 2002-2010 Prof. William H. Green (whgreen@mit.edu) and the
-#   RMG Team (rmg_dev@mit.edu)
+#   Copyright (c) 2002-2017 Prof. William H. Green (whgreen@mit.edu), 
+#   Prof. Richard H. West (r.west@neu.edu) and the RMG Team (rmg_dev@mit.edu)
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the 'Software'),
@@ -82,6 +82,7 @@ class Entry(object):
     `shortDesc`         A brief (one-line) description of the data
     `longDesc`          A long, verbose description of the data
     `rank`              An integer indicating the degree of confidence in the entry data, or ``None`` if not used
+    `nodalDistance`     A float representing the distance of a given entry from it's parent entry
     =================== ========================================================
 
     """
@@ -98,6 +99,7 @@ class Entry(object):
                  shortDesc='',
                  longDesc='',
                  rank=None,
+                 nodalDistance=None,
                  ):
         self.index = index
         self.label = label
@@ -110,6 +112,7 @@ class Entry(object):
         self._shortDesc = unicode(shortDesc)
         self._longDesc = unicode(longDesc)
         self.rank = rank
+        self.nodalDistance=nodalDistance
 
     def __str__(self):
         return self.label

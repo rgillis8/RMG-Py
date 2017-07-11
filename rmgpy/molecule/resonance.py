@@ -5,7 +5,8 @@
 #
 #   RMG - Reaction Mechanism Generator
 #
-#   Copyright (c) 2009-2011 by the RMG Team (rmg_dev@mit.edu)
+#   Copyright (c) 2002-2017 Prof. William H. Green (whgreen@mit.edu), 
+#   Prof. Richard H. West (r.west@neu.edu) and the RMG Team (rmg_dev@mit.edu)
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a
 #   copy of this software and associated documentation files (the 'Software'),
@@ -526,6 +527,7 @@ def generateAromaticResonanceStructures(mol, features=None):
                         bond.order = order
                     # Move it to the end of the list, and go on to the next ring
                     aromaticBonds.append(aromaticBonds.pop(i))
+                    mol0.updateAtomTypes(logSpecies=False)
                     continue
                 else:
                     # We're done with this ring, so go on to the next ring
