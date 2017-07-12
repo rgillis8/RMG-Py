@@ -86,25 +86,67 @@ class GaussianLog:
 
         Natoms = self.getNumberOfAtoms()
         Nrows = Natoms * 3
+        Nentries = (Natoms*(Natoms+1))/2
 
         f = open(self.path, 'r')
         line = f.readline()
+        F = numpy.zeros((Nrows,Nrows),numpy.float64)
         while line != '':
-            # Read force constant matrix
-            if 'Force constants in Cartesian coordinates:' in line:
-                F = numpy.zeros((Nrows,Nrows), numpy.float64)
-                for i in range(int(math.ceil(Nrows / 5.0))):
-                    # Header row
+            if '\NI' in line or 'Imag=' in line:
+                longstring = line
+                line = f.readline()
+                while '\\' not in line:
+                    longstring += line
                     line = f.readline()
-                    # Matrix element rows
-                    for j in range(i*5, Nrows):
-                        data = f.readline().split()
-                        for k in range(len(data)-1):
-                            F[j,i*5+k] = float(data[k+1].replace('D', 'E'))
-                            F[i*5+k,j] = F[j,i*5+k]
-                # Convert from atomic units (Hartree/Bohr_radius^2) to J/m^2
-                F *= 4.35974417e-18 / 5.291772108e-11**2
+                longstring += line
             line = f.readline()
+
+        datalist = longstring.split(',')
+        n = len(datalist)
+        for i in range(0,n):
+            datalist[i] = datalist[i].replace("\n","")
+            if 'Imag=' in datalist[i]:
+                datalist[i] = datalist[i][-11:]
+                for j in range(0,i):
+                    del datalist[j]
+            if '\\' in datalist[i]:
+                datalist[i] = datalist[i][:11]
+            datalist[i] = datalist[i].replace("\\","")
+            datalist[i] = datalist[i].replace("@","")
+            datalist[i] = datalist[i].replace(" ","")
+            n = len(datalist)
+
+        #print(datalist)
+        m = 0
+        for k in range(0,Nrows):
+            for l in range(0,Nrows):
+                if l > k:
+                    continue
+                else:
+                    F[k][l]=datalist[m]
+                    m += 1
+        # Convert from atomic units (Hartree/Bohr_radius^2) to J/m^2
+        F *= 4.35974417e-18 / 5.291772108e-11**2
+        #print(Nrows)
+        #print(F)
+        #raise Exception('gets here')
+        ####################Old Method#################################################
+        #while line != '':
+        #    # Read force constant matrix
+        #    if 'Force constants in Cartesian coordinates:' in line:
+        #        F = numpy.zeros((Nrows,Nrows), numpy.float64)
+        #        for i in range(int(math.ceil(Nrows / 5.0))):
+        #            # Header row
+        #            line = f.readline()
+        #            # Matrix element rows
+        #            for j in range(i*5, Nrows):
+        #                data = f.readline().split()
+        #                for k in range(len(data)-1):
+        #                    F[j,i*5+k] = float(data[k+1].replace('D', 'E'))
+        #                    F[i*5+k,j] = F[j,i*5+k]
+        #        # Convert from atomic units (Hartree/Bohr_radius^2) to J/m^2
+        #        F *= 4.35974417e-18 / 5.291772108e-11**2
+        #    line = f.readline()
         # Close file when finished
         f.close()
 
