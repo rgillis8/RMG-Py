@@ -86,7 +86,6 @@ class GaussianLog:
 
         Natoms = self.getNumberOfAtoms()
         Nrows = Natoms * 3
-        Nentries = (Natoms*(Natoms+1))/2
 
         f = open(self.path, 'r')
         line = f.readline()
@@ -115,8 +114,6 @@ class GaussianLog:
             datalist[i] = datalist[i].replace("@","")
             datalist[i] = datalist[i].replace(" ","")
             n = len(datalist)
-
-        #print(datalist)
         m = 0
         for k in range(0,Nrows):
             for l in range(0,Nrows):
@@ -127,9 +124,7 @@ class GaussianLog:
                     m += 1
         # Convert from atomic units (Hartree/Bohr_radius^2) to J/m^2
         F *= 4.35974417e-18 / 5.291772108e-11**2
-        #print(Nrows)
-        #print(F)
-        #raise Exception('gets here')
+
         ####################Old Method#################################################
         #while line != '':
         #    # Read force constant matrix
@@ -148,6 +143,7 @@ class GaussianLog:
         #        F *= 4.35974417e-18 / 5.291772108e-11**2
         #    line = f.readline()
         # Close file when finished
+
         f.close()
 
         return F
