@@ -234,9 +234,11 @@ class StatMechJob:
         
         try:
             externalSymmetry = local_context['externalSymmetry']
+            symfromlog = False
         except KeyError:
-            raise InputError('Required attribute "externalSymmetry" not found in species file {0!r}.'.format(path))
-        
+            externalSymmetry = None
+            symfromlog = True
+            
         try:
             spinMultiplicity = local_context['spinMultiplicity']
         except KeyError:
@@ -311,7 +313,7 @@ class StatMechJob:
                                     'Please verify that the geometry and Hessian of {0!r} are defined in the same coordinate system'.format(self.species.label))
 
         logging.debug('    Reading molecular degrees of freedom...')
-        conformer = statmechLog.loadConformer(symmetry=externalSymmetry, spinMultiplicity=spinMultiplicity, opticalIsomers=opticalIsomers)
+        conformer = statmechLog.loadConformer(symmetry=externalSymmetry, spinMultiplicity=spinMultiplicity, opticalIsomers=opticalIsomers, symfromlog = symfromlog)
         
         logging.debug('    Reading optimized geometry...')
         coordinates, number, mass = geomLog.loadGeometry()
@@ -542,8 +544,9 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
     # Step 1: Reference all energies to a model chemistry-independent basis
     # by subtracting out that model chemistry's atomic energies
     # Note: If your model chemistry does not include spin orbit coupling, you should add the corrections to the energies here
-
-    if modelChemistry == 'G3':
+    if modelChemistry == 'CBS-QB3':
+        atomEnergies = {'H':-0.499818 + SOC['H'], 'N':-54.520543 + SOC['N'], 'O':-74.987624+ SOC['O'], 'C':-37.785385+ SOC['C'], 'P':-340.817186+ SOC['P'], 'S': -397.657360 + SOC['S']}
+    elif modelChemistry == 'G3':
         atomEnergies = {'H':-0.5010030, 'N':-54.564343, 'O':-75.030991, 'C':-37.827717, 'P':-341.116432, 'S': -397.961110}
     elif modelChemistry == 'M06-2X/cc-pVTZ':
         atomEnergies = {'H':-0.498135 + SOC['H'], 'N':-54.586780 + SOC['N'], 'O':-75.064242+ SOC['O'], 'C':-37.842468+ SOC['C'], 'P':-341.246985+ SOC['P'], 'S': -398.101240+ SOC['S']}
@@ -593,8 +596,6 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
 #This model chemistry is a mixture of basis sets to test Iodine atoms in Cantherm. aug-cc-pVTZ-PP is for I, aug-cc-pVTZ is for the remaining atoms
     elif modelChemistry == 'CCSD(T)-F12/aug-cc-pVTZ(-PP)':
         atomEnergies = {'H':-0.499844820798 + SOC['H'], 'N':-54.527419359906 + SOC['N'], 'O':-75.000001429806+ SOC['O'], 'C':-37.788504810868+ SOC['C'], 'S':-397.615032078484, 'I':-294.816178186847}
-    elif modelChemistry == 'CBS-QB3':
-        atomEnergies = {'H':-0.499818 + SOC['H'], 'N':-54.520543 + SOC['N'], 'O':-74.987624+ SOC['O'], 'C':-37.785385+ SOC['C'], 'P':-340.817186+ SOC['P'], 'S': -397.657360 + SOC['S']}
     elif modelChemistry == 'CCSD(T)/aug-cc-pVTZ(-PP)':
         atomEnergies = {'H':-0.499821176024 + SOC['H'], 'N':-54.417460988701 + SOC['N'], 'O':-74.97498502 + SOC['O'], 'C':-37.729456757559 + SOC['C'], 'S':-397.6242802 + SOC['S'], 'I':-294.8436651}
     elif modelChemistry == 'B-CCSD(T)-F12/cc-pVDZ-F12':
@@ -674,7 +675,6 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
     for symbol, count in atoms.items():
         if symbol in atomEnergies: E0 += count * atomEnergies[symbol] * 4184.
 
-    #raise Exception('{0:f}'.format(E0))
     # Step 3: Bond energy corrections
     #The order of elements in the bond correction label is important and should follow the order specified below:
     #'C', 'N', 'O', 'S', 'P', and 'H'
