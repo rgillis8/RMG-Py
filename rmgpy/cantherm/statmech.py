@@ -425,7 +425,7 @@ class StatMechJob:
 
         elif len(conformer.modes) > 2:
             if len(rotors) > 0:
-                logging.warn('Force Constant Matrix Missing Ignoring rotors, if running Gaussian if not already present you need to add the keyword iop(7/33=1) in your Gaussian frequency job for Gaussian to generate the force constant matrix')
+                logging.warn('Force Constant Matrix Missing Ignoring rotors, if running Gaussian if not already present you need to add the keyword iop(7/33=1) in your Gaussian frequency job for Gaussian to generate the force constant matrix, if running Molpro include keyword print, hessian')
             frequencies = conformer.modes[2].frequencies.value_si
             rotors = numpy.array([])
         else:
@@ -597,7 +597,7 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds):
     elif modelChemistry == 'CCSD(T)-F12/aug-cc-pVTZ(-PP)':
         atomEnergies = {'H':-0.499844820798 + SOC['H'], 'N':-54.527419359906 + SOC['N'], 'O':-75.000001429806+ SOC['O'], 'C':-37.788504810868+ SOC['C'], 'S':-397.615032078484, 'I':-294.816178186847}
     elif modelChemistry == 'CCSD(T)/aug-cc-pVTZ(-PP)':
-        atomEnergies = {'H':-0.499821176024 + SOC['H'], 'N':-54.417460988701 + SOC['N'], 'O':-74.97498502 + SOC['O'], 'C':-37.729456757559 + SOC['C'], 'S':-397.6242802 + SOC['S'], 'I':-294.8436651}
+        atomEnergies = {'H':-0.499821176024 + SOC['H'], 'N':-54.417460988701 + SOC['N'], 'O':-74.97498502 + SOC['O'], 'C':-37.781825 + SOC['C'], 'S':-397.6242802 + SOC['S'], 'I':-294.8436651}
     elif modelChemistry == 'B-CCSD(T)-F12/cc-pVDZ-F12':
         atomEnergies = {'H':-0.499811124128 + SOC['H'], 'N':-54.523269942190 + SOC['N'], 'O':-74.990725918500 + SOC['O'], 'C':-37.785409916465 + SOC['C'], 'S': -397.658155086033 + SOC['S']}
     elif modelChemistry == 'B-CCSD(T)-F12/cc-pVTZ-F12':
