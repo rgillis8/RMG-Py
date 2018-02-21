@@ -286,7 +286,7 @@ class MoleProLog:
         if E0 is not None:
             E0 = E0 * constants.E_h * constants.Na
             return E0
-        else: raise Exception('Unable to find energy in MolePro log file.')
+        else: raise Exception('Unable to find energy in MolePro log file. Make sure that the keyword {frequencies, thermo, print,thermo} is included in the input file')
 
     def loadZeroPointEnergy(self):
         """
@@ -318,4 +318,4 @@ class MoleProLog:
         if ZPE is not None:
             return ZPE
         else:
-            raise Exception('Unable to find zero-point energy in MolPro log file.')
+            raise Exception('Unable to find zero-point energy in MolPro log file. Make sure that the keyword {frequencies, thermo, print,thermo} is included in the input file')
