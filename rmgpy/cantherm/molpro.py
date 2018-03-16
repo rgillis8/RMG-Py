@@ -35,10 +35,10 @@ import rmgpy.constants as constants
 
 from rmgpy.statmech import IdealGasTranslation, NonlinearRotor, LinearRotor, HarmonicOscillator, Conformer
 
-class MoleProLog:
+class MolProLog:
     """
-    Represents a MolePro log file. The attribute `path` refers to the
-    location on disk of the MolePro log file of interest. Methods are provided
+    Represents a MolPro log file. The attribute `path` refers to the
+    location on disk of the MolPro log file of interest. Methods are provided
     to extract a variety of information into CanTherm classes and/or NumPy
     arrays. 
     """
@@ -238,9 +238,9 @@ class MoleProLog:
 
     def loadEnergy(self,frequencyScaleFactor=1.):
         """
-        Return the f12 energy in J/mol from a MolePro Logfile of a CCSD(T)-f12 job. 
+        Return the f12 energy in J/mol from a MolPro Logfile of a CCSD(T)-f12 job.
         This function determines which energy (f12a or f12b) to use based on the basis set,
-        which it will parse out of the molepro file. For the vtz and dtz basis sets f12a is
+        which it will parse out of the molpro file. For the vtz and dtz basis sets f12a is
         better approximation, but for higher basis sets f12b is a better approximation
         """
         f = open(self.path, 'r')
@@ -254,7 +254,7 @@ class MoleProLog:
                 else: f12a=False
                 break
             line=f.readline()
-        else: raise Exception('Could not find basis set in MolePro File')
+        else: raise Exception('Could not find basis set in MolPro File')
         #search for energy
         E0=None
         if f12a:
@@ -286,7 +286,7 @@ class MoleProLog:
         if E0 is not None:
             E0 = E0 * constants.E_h * constants.Na
             return E0
-        else: raise Exception('Unable to find energy in MolePro log file. Make sure that the keyword {frequencies, thermo, print,thermo} is included in the input file')
+        else: raise Exception('Unable to find energy in MolPro log file. Make sure that the keyword {frequencies, thermo, print,thermo} is included in the input file')
 
     def loadZeroPointEnergy(self):
         """

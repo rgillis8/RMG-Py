@@ -32,47 +32,47 @@ import numpy
 import unittest
 import os
 
-from rmgpy.cantherm.molepro import MoleProLog
+from rmgpy.cantherm.molpro import MolProLog
 from rmgpy.statmech import IdealGasTranslation, LinearRotor, NonlinearRotor, HarmonicOscillator, HinderedRotor
 import rmgpy.constants as constants
 
 ################################################################################
 
-class MoleProTest(unittest.TestCase):
+class MolProTest(unittest.TestCase):
     """
     Contains unit tests for the chempy.io.gaussian module, used for reading
-    and writing Molepro files.
+    and writing Molpro files.
     """
     
-    def testLoadDzFromMoleProLog_F12(self):
+    def testLoadDzFromMolProLog_F12(self):
         """
-        Uses a Molepro log file for ethylene_dz (C2H4) to test that F12a
+        Uses a Molpro log file for ethylene_dz (C2H4) to test that F12a
         energy can be properly read.
         """
         
-        log=MoleProLog(os.path.join(os.path.dirname(__file__),'data','ethylene_f12_dz.out'))
+        log=MolProLog(os.path.join(os.path.dirname(__file__),'data','ethylene_f12_dz.out'))
         E0=log.loadEnergy()
         
         self.assertAlmostEqual(E0 / constants.Na / constants.E_h, -78.474353559604, 5)
     
-    def testLoadQzFromMoleProLog_F12(self):
+    def testLoadQzFromMolProLog_F12(self):
         """
-        Uses a Molepro log file for ethylene_qz (C2H4) to test that F12b
+        Uses a Molpro log file for ethylene_qz (C2H4) to test that F12b
         energy can be properly read.
         """
         
-        log=MoleProLog(os.path.join(os.path.dirname(__file__),'data','ethylene_f12_qz.out'))
+        log=MolProLog(os.path.join(os.path.dirname(__file__),'data','ethylene_f12_qz.out'))
         E0=log.loadEnergy()
         
         self.assertAlmostEqual(E0 / constants.Na / constants.E_h, -78.472682755635, 5)
 
-    def testLoadRadFromMoleProLog_F12(self):
+    def testLoadRadFromMolProLog_F12(self):
         """
-        Uses a Molepro log file for OH (C2H4) to test that radical
+        Uses a Molpro log file for OH (C2H4) to test that radical
         energy can be properly read.
         """
         
-        log=MoleProLog(os.path.join(os.path.dirname(__file__),'data','OH_f12.out'))
+        log=MolProLog(os.path.join(os.path.dirname(__file__),'data','OH_f12.out'))
         E0=log.loadEnergy()
         
         self.assertAlmostEqual(E0 / constants.Na / constants.E_h, -75.663696424380, 5)
@@ -83,7 +83,7 @@ class MoleProTest(unittest.TestCase):
         molecular degrees of freedom can be properly read.
         """
 
-        log = MoleProLog(os.path.join(os.path.dirname(__file__),'data','HOSI_ccsd_t1.out'))
+        log = MolProLog(os.path.join(os.path.dirname(__file__),'data','HOSI_ccsd_t1.out'))
         conformer = log.loadConformer(symfromlog=True, spinMultiplicity=1)
         E0 = log.loadEnergy()
 
