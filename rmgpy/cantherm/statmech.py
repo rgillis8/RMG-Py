@@ -60,7 +60,7 @@ from rmgpy.exceptions import InputError
 # These are the atoms we currently have enthalpies of formation for
 atom_num_dict = {1: 'H',
                  3: 'Li', 4: 'Be', 5: 'B', 6: 'C', 7: 'N', 8: 'O', 9: 'F',
-                 11: 'Na', 12: 'Mg', 13: 'Al', 14: 'Si', 15: 'P', 16: 'S', 17: 'Cl'}
+                 11: 'Na', 12: 'Mg', 13: 'Al', 14: 'Si', 15: 'P', 16: 'S', 17: 'Cl', 53: 'I'}
 
 # Use the RDKit periodic table so we can write symbols for not implemented elements
 _rdkit_periodic_table = GetPeriodicTable()
