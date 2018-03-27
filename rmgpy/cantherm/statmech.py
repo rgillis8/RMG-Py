@@ -622,6 +622,10 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds,
                 atomEnergies = {'H':-0.499994558325 + SOC['H'], 'N':-54.589137594139+ SOC['N'], 'O':-75.067412234737+ SOC['O'], 'C':-37.844893820561+ SOC['C']}
             elif modelChemistry == 'ccsd(t)-f12/cc-pvtz-f12(-pp)':
                 atomEnergies = {'H':-0.499946213243, 'N':-54.53000909621, 'O':-75.004127673424, 'C':-37.789862146471, 'S':-397.675447487865, 'I':-294.81781766}
+            elif modelChemistry == 'ccsd(t)-f12/aug-cc-pvtz(-pp)':
+                atomEnergies = {'H':-0.499844820798 + SOC['H'], 'N':-54.527419359906 + SOC['N'], 'O':-75.000001429806+ SOC['O'], 'C':-37.788504810868+ SOC['C'], 'S':-397.615032078484, 'I':-294.816178186847}
+            elif modelChemistry == 'ccsd(t)/aug-cc-pvtz(-pp)':
+                atomEnergies = {'H':-0.499821176024 + SOC['H'], 'N':-54.417460988701 + SOC['N'], 'O':-74.97498502 + SOC['O'], 'C':-37.729456757559 + SOC['C'], 'S':-397.6242802 + SOC['S'], 'I':-294.8436651}
 
             elif modelChemistry == 'ccsd(t)-f12/aug-cc-pvdz':
                 atomEnergies = {'H':-0.499459066131 + SOC['H'], 'N':-54.524279516472 + SOC['N'], 'O':-74.992097308083+ SOC['O'], 'C':-37.786694171716+ SOC['C']}
@@ -701,12 +705,12 @@ def applyEnergyCorrections(E0, modelChemistry, atoms, bonds,
         # The enthalpies listed here should correspond to the allowed elements in atom_num_dict
         atomHf = {'H': 51.63,
                   'Li': 37.69, 'Be': 76.48, 'B': 136.2, 'C': 169.98, 'N': 112.53, 'O': 58.99, 'F': 18.47,
-                  'Na': 25.69, 'Mg': 34.87, 'Al': 78.23, 'Si': 106.6, 'P': 75.42, 'S': 65.66, 'Cl': 28.59}
+                  'Na': 25.69, 'Mg': 34.87, 'Al': 78.23, 'Si': 106.6, 'P': 75.42, 'S': 65.66, 'Cl': 28.59, 'I':0}
         # Thermal contribution to enthalpy Hss(298 K) - Hss(0 K) reported by Gaussian thermo whitepaper
         # This will be subtracted from the corresponding value in atomHf to produce an enthalpy used in calculating the enthalpy of formation at 298 K
         atomThermal = {'H': 1.01,
                        'Li': 1.1, 'Be': 0.46, 'B': 0.29, 'C': 0.25, 'N': 1.04, 'O': 1.04, 'F': 1.05,
-                       'Na': 1.54, 'Mg': 1.19, 'Al': 1.08, 'Si': 0.76, 'P': 1.28, 'S': 1.05, 'Cl': 1.1}
+                       'Na': 1.54, 'Mg': 1.19, 'Al': 1.08, 'Si': 0.76, 'P': 1.28, 'S': 1.05, 'Cl': 1.1, 'I':0}
         # Total energy correction used to reach gas-phase reference state
         # Note: Spin orbit coupling no longer included in these energies, since some model chemistries include it automatically
         atomEnthalpyCorrections = {element: atomHf[element] - atomThermal[element] for element in atomHf}
