@@ -1412,7 +1412,17 @@ class ThermoDatabase(object):
         indices = self.prioritizeThermo(species, thermo)
         
         species.molecule = [species.molecule[ind] for ind in indices]
-        
+
+        m = 0        
+        #Pushes all charged species to the back of the list
+        for i in range(len(species.molecule)):
+            if species.molecule[i-m].has_Charge() is True:
+                species.molecule.append(species.molecule[i-m])
+                thermo.append(thermo[i-m])
+                del species.molecule[i-m]
+                del thermo[i-m]
+                m += 1
+
         thermoData = thermo[indices[0]]
         findCp0andCpInf(species, thermoData)
         return thermoData
