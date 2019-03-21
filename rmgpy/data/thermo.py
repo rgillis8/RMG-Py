@@ -1702,6 +1702,16 @@ class ThermoDatabase(object):
 
         species.molecule = [species.molecule[ind] for ind in indices]
 
+        m = 0        
+        #Pushes all charged species to the back of the list, as a result the lowest enthalpy non-charged resonance form is used for GAV estimation
+        for i in range(len(species.molecule)):
+            if species.molecule[i-m].has_Charge() is True:
+                species.molecule.append(species.molecule[i-m])
+                thermo.append(thermo[i-m])
+                del species.molecule[i-m]
+                del thermo[i-m]
+                m += 1
+
         thermo_data = thermo[indices[0]]
         find_cp0_and_cpinf(species, thermo_data)
         return thermo_data
