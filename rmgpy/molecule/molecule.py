@@ -1870,6 +1870,12 @@ class Molecule(Graph):
             if atom.lonePairs > 0:
                 return True
         return False
+    
+    def has_Charge(self):
+        for atom in self.vertices:
+            if atom.charge != 0:
+                return True
+        return False
 
     def isArylRadical(self, aromaticRings=None):
         """
