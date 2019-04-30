@@ -356,7 +356,7 @@ class Cantera:
             for j, species in enumerate(self.sensitiveSpecies):
                 ReactionSensitivityPlot(xVar=time, yVar=reactionSensitivityData[j*numCtReactions:(j+1)*numCtReactions], numReactions=topSensitiveReactions).barplot(os.path.join(self.outputDirectory,'{0}_{1}_sensitivity.png'.format(i+1,species.toChemkin())))
             
-    def simulate(self):
+    def simulate(self, atol = 1e-16, rtol = 1e-8):
         """
         Run all the conditions as a cantera simulation.
         Returns the data as a list of tuples containing: (time, [list of temperature, pressure, and species data]) 
@@ -396,7 +396,9 @@ class Cantera:
             
             # Run this individual condition as a simulation
             canteraSimulation=ct.ReactorNet([canteraReactor])
-            
+            canteraSimulation.atol = atol
+	    canteraSimulation.rtol = rtol
+
             numCtReactions = len(self.model.reactions())
             if self.sensitiveSpecies:
                 if ct.__version__ == '2.2.1':
