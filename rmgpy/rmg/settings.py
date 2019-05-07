@@ -118,7 +118,7 @@ class SimulatorSettings(object):
     """
     class for holding the parameters affecting the behavior of the solver
     """
-    def __init__(self,atol=1e-16, rtol=1e-8, sens_atol=1e-6, sens_rtol=1e-4):
+    def __init__(self,atol=1e-16, rtol=1e-8, sens_atol=1e-1, sens_rtol=1e-1):
         self.atol = atol
         self.rtol = rtol
         self.sens_atol = sens_atol
