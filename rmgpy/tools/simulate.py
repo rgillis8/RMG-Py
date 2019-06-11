@@ -119,9 +119,9 @@ def simulate(rmg, diffusionLimited=True):
                 solventData = rmg.database.solvation.getSolventData(rmg.solvent)
                 diffusionLimiter.enable(solventData, rmg.database.solvation)
 
-            # Store constant species indices
-            if reactionSystem.constSPCNames is not None:
-                reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
+        # Store constant species indices
+        if reactionSystem.constSPCNames is not None:
+            reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
         
         reactionSystem.simulate(
             coreSpecies=rmg.reactionModel.core.species,
