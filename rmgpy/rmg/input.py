@@ -190,7 +190,7 @@ def simple_reactor(temperature,
                    sensitivityTemperature=None,
                    sensitivityPressure=None,
                    sensitivityMoleFractions=None,
-                   ):
+                   constantSpecies=None):
     logging.debug('Found SimpleReactor reaction system')
 
     for key, value in initialMoleFractions.items():
@@ -249,7 +249,15 @@ def simple_reactor(temperature,
         else:
             sensitive_species.append('all')
 
-    if not isinstance(T, list):
+    #Check the constant species exist
+    if constantSpecies is not None:
+        logging.debug('  Generation with constant species:')
+        for constantSpecie in constantSpecies:
+            logging.debug("  {0}".format(constantSpecie))
+            if not speciesDict.has_key(constantSpecie):
+                raise InputError('Species {0} not found in the input file'.format(constantSpecie))
+    
+    if not isinstance(T,list):
         sensitivityTemperature = T
     if not isinstance(P, list):
         sensitivityPressure = P
@@ -262,8 +270,7 @@ def simple_reactor(temperature,
         sens_conditions['T'] = Quantity(sensitivityTemperature).value_si
         sens_conditions['P'] = Quantity(sensitivityPressure).value_si
 
-    system = SimpleReactor(T, P, initialMoleFractions, nSims, termination, sensitive_species, sensitivityThreshold,
-                           sens_conditions)
+    system = SimpleReactor(T, P, initialMoleFractions, nSims, termination, sensitive_species, sensitivityThreshold, sens_conditions, constantSpecies)
     rmg.reaction_systems.append(system)
 
     assert balanceSpecies is None or isinstance(balanceSpecies, str), 'balanceSpecies should be the string corresponding to a single species'
