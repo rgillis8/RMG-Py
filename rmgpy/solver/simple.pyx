@@ -55,6 +55,8 @@ cdef class SimpleReactor(ReactionSystem):
     cdef public double V
     cdef public bint constantVolume
     cdef public dict initialMoleFractions
+    cdef public list constSPCNames
+    cdef public list constSPCIndices
 
     # collider variables
 
@@ -108,7 +110,7 @@ cdef class SimpleReactor(ReactionSystem):
     cdef public list Prange
     cdef public int nSims
 
-    def __init__(self, T, P, initialMoleFractions, nSims=1, termination=None, sensitiveSpecies=None, sensitivityThreshold=1e-3,sensConditions=None):
+    def __init__(self, T, P, initialMoleFractions, nSims=1, termination=None, sensitiveSpecies=None, sensitivityThreshold=1e-3,sensConditions=None, constSPCNames=None):
         ReactionSystem.__init__(self, termination, sensitiveSpecies, sensitivityThreshold)
         
         
@@ -123,7 +125,10 @@ cdef class SimpleReactor(ReactionSystem):
             self.Prange = [Quantity(p) for p in P]
         
         self.initialMoleFractions = initialMoleFractions
-
+        #Constant Species Properties
+        self.constSPCIndices=None
+        self.constSPCNames = constSPCNames #store index of constant species 
+        
         self.V = 0 # will be set in initializeModel
         self.constantVolume = False
 
@@ -162,6 +167,15 @@ cdef class SimpleReactor(ReactionSystem):
                 else:
                     conditions[speciesDict[label]] = value
         self.sensConditions = conditions
+
+    def get_constSPCIndices (self, coreSpecies):
+        "Allow to identify constant Species position in solver"
+        for spc in self.constSPCNames:
+            if self.constSPCIndices is None: #initialize once the list if constant SPC declared
+                self.constSPCIndices=[]
+            for iter in coreSpecies: #Need to identify the species object corresponding to the the string written in the input file
+                if iter.label == spc:
+                    self.constSPCIndices.append(coreSpecies.index(iter))#get 
 
     cpdef initializeModel(self, list coreSpecies, list coreReactions, list edgeSpecies, list edgeReactions,
                           list surfaceSpecies=None, list surfaceReactions=None, list pdepNetworks=None,
@@ -501,6 +515,11 @@ cdef class SimpleReactor(ReactionSystem):
             else: # three reactants!! (really?)
                 reactionRate = k * C[inet[j,0]] * C[inet[j,1]] * C[inet[j,2]]
             networkLeakRates[j] = reactionRate
+	
+        #chatelak: Same as in Java, coreSpecies rate = 0 if declared as constatn 
+        if self.constSPCIndices is not None:
+            for spcIndice in self.constSPCIndices:
+                coreSpeciesRates[spcIndice] = 0
 
         self.coreSpeciesConcentrations = coreSpeciesConcentrations
         self.coreSpeciesRates = coreSpeciesRates
