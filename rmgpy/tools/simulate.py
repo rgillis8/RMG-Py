@@ -78,18 +78,20 @@ def simulate(rmg, diffusionLimited=True):
         modelSettings = ModelSettings(toleranceKeepInEdge=0, toleranceMoveToCore=1, toleranceInterruptSimulation=1)
         simulatorSettings = rmg.simulatorSettingsList[-1]
 
+       
         if isinstance(reactionSystem, LiquidReactor):
             if diffusionLimited:
                 rmg.loadDatabase()
                 solventData = rmg.database.solvation.getSolventData(rmg.solvent)
                 diffusionLimiter.enable(solventData, rmg.database.solvation)
-
-            # Store constant species indices
-            if reactionSystem.constSPCNames is not None:
-                reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
         elif rmg.uncertainty is not None:
             rmg.verboseComments = True
             rmg.loadDatabase()
+
+	# Store constant species indices
+        if reactionSystem.constSPCNames is not None:
+            reactionSystem.get_constSPCIndices(rmg.reactionModel.core.species)
+
         
         reactionSystem.simulate(
             coreSpecies=rmg.reactionModel.core.species,
